@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CliftonStrengths Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    .input-section, .question, .result {
+      margin-bottom: 20px;
+    }
+    .input-section label, .question p {
+      font-weight: bold;
+    }
+    .options label {
+      display: block;
+      margin: 5px 0;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    .result {
+      padding: 20px;
+      background-color: #ecf0f1;
+      border-radius: 5px;
+    }
+    .chart-container {
+      width: 80%;
+      margin: 20px auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ddd;
+    }
+    th, td {
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <h1>CliftonStrengths Quiz</h1>
+  <h4>PT Konsult Indo Sukses</h4><br>
+
+  <!-- Input Data Peserta -->
+  <div class="input-section">
+    <h2>Data Peserta</h2>
+    <label for="nama">Nama Peserta:</label>
+    <input type="text" id="nama" required><br><br>
+    <label for="perusahaan">Nama Perusahaan:</label>
+    <input type="text" id="perusahaan" required><br><br>
+    <label for="tanggalLahir">Tanggal Lahir:</label>
+    <input type="date" id="tanggalLahir" required><br><br>
+    <label for="tanggalTest">Tanggal Isi Test:</label>
+    <input type="date" id="tanggalTest" required><br><br>
+    <label for="jabatan">Jabatan:</label>
+    <input type="text" id="jabatan" required><br><br>
+    <label for="bagian">Bagian:</label>
+    <input type="text" id="bagian" required><br><br>
+    <label for="lamaBekerja">Lama Bekerja (tahun):</label>
+    <input type="number" id="lamaBekerja" required><br><br>
+  </div>
+
+  <!-- Form Quiz -->
+  <form id="quizForm">
+    <!-- Pertanyaan 1 -->
+    <div class="question">
+      <p>1. Ketika menghadapi masalah sulit, apa yang biasanya Anda lakukan?</p>
+      <div class="options">
+        <label><input type="radio" name="q1" value="Analytical"> A. Menganalisis berbagai kemungkinan solusi sebelum bertindak.</label>
+        <label><input type="radio" name="q1" value="Activator"> B. Langsung bertindak dan mencari solusi sambil berjalan.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 2 -->
+    <div class="question">
+      <p>2. Bagaimana Anda merespons tantangan baru?</p>
+      <div class="options">
+        <label><input type="radio" name="q2" value="Positivity"> A. Saya merasa bersemangat dan ingin segera mencobanya.</label>
+        <label><input type="radio" name="q2" value="Deliberative"> B. Saya lebih suka menunggu dan melihat bagaimana orang lain melakukannya.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 3 -->
+    <div class="question">
+      <p>3. Dalam sebuah tim, peran apa yang biasanya Anda ambil?</p>
+      <div class="options">
+        <label><input type="radio" name="q3" value="Harmony"> A. Saya mengoordinasikan dan memastikan semua orang bekerja sama dengan baik.</label>
+        <label><input type="radio" name="q3" value="Developer"> B. Saya mendukung dan membantu anggota tim secara individu.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 4 -->
+    <div class="question">
+      <p>4. Bagaimana cara Anda mengambil keputusan?</p>
+      <div class="options">
+        <label><input type="radio" name="q4" value="Analytical"> A. Berdasarkan data dan analisis yang matang.</label>
+        <label><input type="radio" name="q4" value="Intellection"> B. Berdasarkan intuisi dan pengalaman pribadi.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 5 -->
+    <div class="question">
+      <p>5. Apa yang lebih memotivasi Anda dalam bekerja?</p>
+      <div class="options">
+        <label><input type="radio" name="q5" value="Achiever"> A. Mencapai hasil yang jelas dan terukur.</label>
+        <label><input type="radio" name="q5" value="Developer"> B. Membantu orang lain berkembang.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 6 -->
+    <div class="question">
+      <p>6. Apa yang membuat Anda merasa puas dalam bekerja?</p>
+      <div class="options">
+        <label><input type="radio" name="q6" value="Strategic"> A. Menemukan pola dan strategi baru untuk menyelesaikan masalah.</label>
+        <label><input type="radio" name="q6" value="Includer"> B. Memastikan semua anggota tim merasa dihargai.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 7 -->
+    <div class="question">
+      <p>7. Bagaimana Anda menghadapi kritik dari orang lain?</p>
+      <div class="options">
+        <label><input type="radio" name="q7" value="Learner"> A. Saya melihatnya sebagai kesempatan untuk belajar dan berkembang.</label>
+        <label><input type="radio" name="q7" value="Adaptability"> B. Saya merasa tidak nyaman tetapi tetap mencoba menerimanya.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 8 -->
+    <div class="question">
+      <p>8. Dalam bekerja, mana yang lebih Anda nikmati?</p>
+      <div class="options">
+        <label><input type="radio" name="q8" value="Ideation"> A. Menciptakan ide-ide baru dan inovatif.</label>
+        <label><input type="radio" name="q8" value="Focus"> B. Menyelesaikan pekerjaan dengan efisiensi tinggi.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 9 -->
+    <div class="question">
+      <p>9. Ketika bekerja dalam tim, apa yang sering Anda lakukan?</p>
+      <div class="options">
+        <label><input type="radio" name="q9" value="Positivity"> A. Memotivasi dan menginspirasi rekan kerja saya.</label>
+        <label><input type="radio" name="q9" value="Responsibility"> B. Memastikan semua tugas diselesaikan dengan baik.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 10 -->
+    <div class="question">
+      <p>10. Bagaimana Anda merencanakan masa depan?</p>
+      <div class="options">
+        <label><input type="radio" name="q10" value="Strategic"> A. Saya memikirkan tujuan jangka panjang dan bagaimana mencapainya.</label>
+        <label><input type="radio" name="q10" value="Achiever"> B. Saya fokus pada apa yang bisa dilakukan sekarang.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 11 -->
+    <div class="question">
+      <p>11. Ketika mempelajari sesuatu yang baru, apa yang Anda lakukan?</p>
+      <div class="options">
+        <label><input type="radio" name="q1" value="Analytical"> A. Mencari sumber terpercaya dan mempelajarinya secara mendalam.</label>
+        <label><input type="radio" name="q1" value="Activator"> B. Mencoba langsung tanpa terlalu banyak riset.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 12 -->
+    <div class="question">
+      <p>12. Apa yang membuat Anda merasa berharga?</p>
+      <div class="options">
+        <label><input type="radio" name="q2" value="Positivity"> A. Ketika saya bisa menginspirasi dan memberi pengaruh pada orang lain.</label>
+        <label><input type="radio" name="q2" value="Deliberative"> B. Ketika saya bisa menyelesaikan tugas dengan sempurna.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 13 -->
+    <div class="question">
+      <p>13. Bagaimana Anda menyikapi perbedaan pendapat dalam tim?</p>
+      <div class="options">
+        <label><input type="radio" name="q3" value="Harmony"> A. Saya mencoba memahami sudut pandang orang lain dan mencari solusi bersama.</label>
+        <label><input type="radio" name="q3" value="Developer"> B. Saya berusaha meyakinkan orang lain dengan argumen logis.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 14 -->
+    <div class="question">
+      <p>14. Apa yang membuat Anda tetap termotivasi dalam pekerjaan?</p>
+      <div class="options">
+        <label><input type="radio" name="q4" value="Analytical"> A. Tantangan dan target yang harus dicapai.</label>
+        <label><input type="radio" name="q4" value="Intellection"> B. Hubungan sosial yang baik dengan rekan kerja.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 15 -->
+    <div class="question">
+      <p>15. Bagaimana Anda beradaptasi dengan perubahan mendadak dalam pekerjaan?</p>
+      <div class="options">
+        <label><input type="radio" name="q5" value="Achiever"> A. Saya melihatnya sebagai tantangan yang menarik.</label>
+        <label><input type="radio" name="q5" value="Developer"> B. Saya butuh waktu untuk menyesuaikan diri.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 16 -->
+    <div class="question">
+      <p>16. Bagaimana Anda merespons ide atau pendapat baru dalam diskusi?</p>
+      <div class="options">
+        <label><input type="radio" name="q6" value="Strategic"> A. Saya selalu tertarik dan ingin mengeksplorasi lebih dalam.</label>
+        <label><input type="radio" name="q6" value="Includer"> B. Saya mempertimbangkan apakah ide tersebut sesuai dengan prinsip saya.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 17 -->
+    <div class="question">
+      <p>17. Bagaimana cara Anda membangun hubungan dengan orang lain?</p>
+      <div class="options">
+        <label><input type="radio" name="q7" value="Learner"> A. Saya membangun koneksi melalui percakapan yang menyenangkan.</label>
+        <label><input type="radio" name="q7" value="Adaptability"> B. Saya lebih suka membantu mereka mencapai tujuan mereka.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 18 -->
+    <div class="question">
+      <p>18. Bagaimana cara Anda menangani tugas yang memiliki banyak langkah dan detail?</p>
+      <div class="options">
+        <label><input type="radio" name="q8" value="Ideation"> A. Saya memastikan semuanya tersusun dengan rapi dan sistematis.</label>
+        <label><input type="radio" name="q8" value="Focus"> B. Saya lebih suka melihat gambaran besarnya dan menyesuaikan di tengah jalan.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 19 -->
+    <div class="question">
+      <p>19. Apa yang membuat Anda merasa puas dalam pekerjaan?</p>
+      <div class="options">
+        <label><input type="radio" name="q9" value="Positivity"> A. Ketika saya bisa mencapai hasil yang terbaik dalam segala hal yang saya lakukan.</label>
+        <label><input type="radio" name="q9" value="Responsibility"> B. Ketika saya bisa membangun hubungan yang kuat dengan kolega dan pelanggan.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 20 -->
+    <div class="question">
+      <p>20. Bagaimana Anda memotivasi orang lain dalam tim?</p>
+      <div class="options">
+        <label><input type="radio" name="q10" value="Strategic"> A. Saya mencontohkan dengan aksi nyata dan dedikasi saya.</label>
+        <label><input type="radio" name="q10" value="Achiever"> B. Saya memberikan kata-kata inspiratif untuk membangkitkan semangat mereka.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 21 -->
+    <div class="question">
+      <p>21. Ketika berbicara dengan seseorang, bagaimana Anda mendekatinya?</p>
+      <div class="options">
+        <label><input type="radio" name="q1" value="Analytical"> A. Saya mencoba memahami perasaan mereka secara mendalam.</label>
+        <label><input type="radio" name="q1" value="Activator"> B. Saya lebih fokus pada fakta dan logika dalam percakapan.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 22 -->
+    <div class="question">
+      <p>22. Apa yang membuat Anda merasa berhasil?</p>
+      <div class="options">
+        <label><input type="radio" name="q2" value="Positivity"> A. Ketika saya bisa mencapai target tinggi yang telah saya tetapkan.</label>
+        <label><input type="radio" name="q2" value="Deliberative"> B. Ketika saya bisa membuat orang lain merasa dihargai.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 23 -->
+    <div class="question">
+      <p>23. Bagaimana Anda menghadapi perubahan dalam pekerjaan?</p>
+      <div class="options">
+        <label><input type="radio" name="q3" value="Harmony"> A. Saya mencari cara agar bisa berkembang dengan perubahan tersebut.</label>
+        <label><input type="radio" name="q3" value="Developer"> B. Saya lebih suka mempertahankan cara lama yang sudah terbukti berhasil.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 24 -->
+    <div class="question">
+      <p>24. Dalam mengerjakan sesuatu, mana yang lebih penting bagi Anda?</p>
+      <div class="options">
+        <label><input type="radio" name="q4" value="Analytical"> A. Memastikan segala sesuatu dilakukan dengan benar.</label>
+        <label><input type="radio" name="q4" value="Intellection"> B. Menyelesaikan pekerjaan secepat mungkin.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 25 -->
+    <div class="question">
+      <p>25. Bagaimana Anda mengatasi masalah yang kompleks?</p>
+      <div class="options">
+        <label><input type="radio" name="q5" value="Achiever"> A. Saya memecahnya menjadi bagian-bagian kecil dan menyelesaikannya satu per satu.</label>
+        <label><input type="radio" name="q5" value="Developer"> B. Saya mencari solusi cepat tanpa terlalu banyak analisis.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 26 -->
+    <div class="question">
+      <p>26. Apa yang paling memotivasi Anda dalam bekerja?</p>
+      <div class="options">
+        <label><input type="radio" name="q6" value="Strategic"> A. Mencapai kesuksesan pribadi dan profesional.</label>
+        <label><input type="radio" name="q6" value="Includer"> B. Melihat bagaimana pekerjaan saya bermanfaat bagi orang lain.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 27 -->
+    <div class="question">
+      <p>27. Jika Anda harus mengelola sebuah tim, bagaimana Anda mendekati tugas tersebut?</p>
+      <div class="options">
+        <label><input type="radio" name="q7" value="Learner"> A. Menginspirasi dan memberi semangat kepada anggota tim.</label>
+        <label><input type="radio" name="q7" value="Adaptability"> B. Menyusun sistem yang efisien agar semua berjalan lancar.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 28 -->
+    <div class="question">
+      <p>28. Bagaimana Anda menilai hubungan dengan orang lain?</p>
+      <div class="options">
+        <label><input type="radio" name="q8" value="Ideation"> A. Hubungan yang dalam lebih penting daripada jumlah teman yang banyak.</label>
+        <label><input type="radio" name="q8" value="Focus"> B. Saya lebih suka memiliki banyak koneksi walaupun tidak semuanya mendalam.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 29 -->
+    <div class="question">
+      <p>29. Apa yang Anda lakukan saat menghadapi tugas yang tampaknya membosankan?</p>
+      <div class="options">
+        <label><input type="radio" name="q9" value="Positivity"> A. Saya mencoba menemukan cara untuk membuatnya lebih menarik.</label>
+        <label><input type="radio" name="q9" value="Responsibility"> B. Saya menyelesaikannya tanpa banyak berpikir.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 30 -->
+    <div class="question">
+      <p>30. Bagaimana cara Anda menghadapi tekanan atau stres dalam bekerja?</p>
+      <div class="options">
+        <label><input type="radio" name="q10" value="Strategic"> A. Saya tetap tenang dan mencari solusi dengan rasional.</label>
+        <label><input type="radio" name="q10" value="Achiever"> B. Saya berbicara dengan orang lain untuk meredakan stres.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 31 -->
+    <div class="question">
+      <p>31. Apa yang lebih penting bagi Anda dalam kehidupan profesional?</p>
+      <div class="options">
+        <label><input type="radio" name="q1" value="Analytical"> A. Membantu orang lain tumbuh dan berkembang.</label>
+        <label><input type="radio" name="q1" value="Activator"> B. Mengembangkan diri sendiri dan mencapai puncak karier.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 32 -->
+    <div class="question">
+      <p>32. Jika Anda dihadapkan dengan tugas yang baru, apa yang akan Anda lakukan?</p>
+      <div class="options">
+        <label><input type="radio" name="q2" value="Positivity"> A. Saya belajar sebanyak mungkin sebelum mulai mengerjakannya.</label>
+        <label><input type="radio" name="q2" value="Deliberative"> B. Saya langsung mencoba dan belajar dari pengalaman.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 33 -->
+    <div class="question">
+      <p>33. Ketika bekerja dalam tim, apa yang Anda lebih sering lakukan?</p>
+      <div class="options">
+        <label><input type="radio" name="q3" value="Harmony"> A. Menjaga keharmonisan di antara anggota tim.</label>
+        <label><input type="radio" name="q3" value="Developer"> B. Memastikan semua anggota tim berkontribusi sesuai tugasnya.</label>
+      </div>
+    </div>
+
+    <!-- Pertanyaan 34 -->
+    <div class="question">
+      <p>34. Bagaimana Anda menghadapi tantangan besar dalam hidup?</p>
+      <div class="options">
+        <label><input type="radio" name="q4" value="Analytical"> A. Saya merencanakan semuanya dengan matang sebelum bertindak.</label>
+        <label><input type="radio" name="q4" value="Intellection"> B. Saya percaya diri bahwa saya bisa menyelesaikannya dengan cara saya sendiri.</label>
+      </div>
+    </div>
+
+
+
+    <!-- Lanjutkan dengan pertanyaan 3 hingga 34 -->
+    <!-- ... -->
+
+    <button type="button" onclick="calculateResult()">Submit</button>
+  </form>
+
+  <!-- Hasil Laporan -->
+  <div class="result" id="result" style="display: none;">
+    <h2>Hasil CliftonStrengths Test</h2>
+    <h4>copyright by PT Konsult Indo Sukses</h4>
+    <p><strong>Nama Peserta:</strong> <span id="resultNama"></span></p>
+    <p><strong>Perusahaan:</strong> <span id="resultPerusahaan"></span></p>
+    <p><strong>Tanggal Lahir:</strong> <span id="resultTanggalLahir"></span></p>
+    <p><strong>Tanggal Test:</strong> <span id="resultTanggalTest"></span></p>
+    <p><strong>Jabatan:</strong> <span id="resultJabatan"></span></p>
+    <p><strong>Bagian:</strong> <span id="resultBagian"></span></p>
+    <p><strong>Lama Bekerja:</strong> <span id="resultLamaBekerja"></span> tahun</p>
+
+    <h3>Interpretasi Hasil</h3>
+    <div id="interpretation"></div>
+
+    <div class="chart-container">
+      <canvas id="strengthChart"></canvas>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tema Kekuatan</th>
+          <th>Skor</th>
+        </tr>
+      </thead>
+      <tbody id="scoreTableBody">
+      </tbody>
+    </table>
+
+    <button type="button" onclick="saveToPDF()">Save to PDF</button>
+  </div>
+
+  <script>
+    const { jsPDF } = window.jspdf;
+    const themeScores = {
+      Analytical: 0,
+      Activator: 0,
+      Positivity: 0,
+      Deliberative: 0,
+      Harmony: 0,
+      Developer: 0,
+      Intellection: 0,
+      Achiever: 0,
+      Strategic: 0,
+      Includer: 0,
+      Learner: 0,
+      Adaptability: 0,
+      Ideation: 0,
+      Focus: 0,
+      Responsibility: 0,
+      // Tambahkan tema lainnya sesuai kebutuhan
+    };
+
+    function calculateResult() {
+      // Reset skor
+      for (let theme in themeScores) {
+        themeScores[theme] = 0;
+      }
+
+      // Hitung skor berdasarkan jawaban
+      const form = document.getElementById('quizForm');
+      const questions = form.querySelectorAll('.question');
+      questions.forEach((question, index) => {
+        const selectedOption = question.querySelector('input[type="radio"]:checked');
+        if (selectedOption) {
+          const theme = selectedOption.value;
+          themeScores[theme]++;
+        }
+      });
+
+      // Tampilkan hasil
+      const resultDiv = document.getElementById('result');
+      const scoreTableBody = document.getElementById('scoreTableBody');
+      const interpretation = document.getElementById('interpretation');
+
+      // Isi data peserta
+      document.getElementById('resultNama').textContent = document.getElementById('nama').value;
+      document.getElementById('resultPerusahaan').textContent = document.getElementById('perusahaan').value;
+      document.getElementById('resultTanggalLahir').textContent = document.getElementById('tanggalLahir').value;
+      document.getElementById('resultTanggalTest').textContent = document.getElementById('tanggalTest').value;
+      document.getElementById('resultJabatan').textContent = document.getElementById('jabatan').value;
+      document.getElementById('resultBagian').textContent = document.getElementById('bagian').value;
+      document.getElementById('resultLamaBekerja').textContent = document.getElementById('lamaBekerja').value;
+
+      // Bersihkan tabel sebelumnya
+      scoreTableBody.innerHTML = '';
+
+      // Isi tabel dengan skor
+      for (let theme in themeScores) {
+        if (themeScores[theme] > 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td>${theme}</td><td>${themeScores[theme]}</td>`;
+          scoreTableBody.appendChild(row);
+        }
+      }
+
+      // Interpretasi berdasarkan tema dengan skor tertinggi
+      interpretation.innerHTML = generateInterpretation();
+
+      // Tampilkan grafik
+      renderChart();
+
+      resultDiv.style.display = 'block';
+    }
+
+    function generateInterpretation() {
+      const themeDescriptions = {
+        Analytical: "Anda memiliki kemampuan untuk menganalisis data dan informasi secara mendalam. Anda cenderung membuat keputusan berdasarkan fakta dan logika, serta dapat melihat pola yang tidak terlihat oleh orang lain.",
+        Activator: "Anda adalah orang yang suka bertindak cepat. Anda percaya bahwa tindakan adalah kunci untuk mencapai hasil, dan Anda sering menjadi penggerak dalam tim.",
+        Positivity: "Anda membawa energi positif ke dalam setiap situasi. Anda optimis dan dapat memotivasi orang lain dengan semangat Anda.",
+        Deliberative: "Anda sangat hati-hati dan waspada dalam mengambil keputusan. Anda mempertimbangkan semua risiko sebelum bertindak.",
+        Harmony: "Anda mencari keselarasan dan menghindari konflik. Anda dapat menciptakan lingkungan kerja yang kooperatif dan damai.",
+        Developer: "Anda senang membantu orang lain tumbuh dan berkembang. Anda melihat potensi dalam diri setiap orang dan mendorong mereka untuk mencapai yang terbaik.",
+        Intellection: "Anda suka berpikir mendalam dan merenung. Anda menikmati diskusi filosofis dan selalu mencari makna di balik segala sesuatu.",
+        Achiever: "Anda memiliki dorongan yang kuat untuk mencapai tujuan. Anda merasa puas ketika dapat menyelesaikan tugas dan mencapai target.",
+        Strategic: "Anda mampu melihat gambaran besar dan merencanakan strategi jangka panjang. Anda dapat menemukan solusi inovatif untuk masalah kompleks.",
+        Includer: "Anda memastikan semua orang merasa diterima dan dihargai. Anda menciptakan lingkungan yang inklusif dan ramah.",
+        Learner: "Anda memiliki hasrat untuk terus belajar dan berkembang. Anda menikmati proses pembelajaran dan selalu mencari pengetahuan baru.",
+        Adaptability: "Anda fleksibel dan dapat menyesuaikan diri dengan perubahan. Anda tetap tenang dalam situasi yang tidak terduga.",
+        Ideation: "Anda kreatif dan suka menghasilkan ide-ide baru. Anda dapat melihat kemungkinan di mana orang lain hanya melihat masalah.",
+        Focus: "Anda fokus pada tujuan dan prioritas. Anda dapat menyelesaikan tugas dengan efisiensi tinggi.",
+        Responsibility: "Anda merasa bertanggung jawab untuk menyelesaikan tugas dengan baik. Anda dapat diandalkan dan berkomitmen."
+      };
+
+      const topThemes = Object.keys(themeScores).filter(theme => themeScores[theme] > 0).sort((a, b) => themeScores[b] - themeScores[a]);
+      const weakThemes = Object.keys(themeScores).filter(theme => themeScores[theme] === 0);
+
+      let interpretationText = `<strong>Tema Kekuatan Teratas Anda:</strong><br>`;
+      topThemes.slice(0, 3).forEach((theme, index) => {
+        interpretationText += `${index + 1}. <strong>${theme}</strong>: ${themeDescriptions[theme]}<br><br>`;
+      });
+
+      interpretationText += `
+        <strong>Faktor Kekuatan yang Perlu Dikembangkan:</strong><br>
+      `;
+      weakThemes.forEach((theme, index) => {
+        interpretationText += `${index + 1}. <strong>${theme}</strong>: ${themeDescriptions[theme]}<br><br>`;
+      });
+
+      interpretationText += `
+        <strong>Saran Pengembangan:</strong><br>
+        - Manfaatkan kekuatan Anda dalam ${topThemes.slice(0, 3).join(', ')} untuk mencapai tujuan pribadi dan profesional.<br>
+        - Fokus pada pengembangan tema kekuatan yang lemah, seperti ${weakThemes.join(', ')}, untuk menjadi pribadi yang lebih seimbang.<br>
+        - Gunakan kekuatan Anda untuk memotivasi dan menginspirasi orang lain di sekitar Anda.
+      `;
+
+      return interpretationText;
+    }
+
+    function renderChart() {
+      const ctx = document.getElementById('strengthChart').getContext('2d');
+      const labels = Object.keys(themeScores).filter(theme => themeScores[theme] > 0);
+      const data = labels.map(theme => themeScores[theme]);
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Skor Tema Kekuatan',
+            data: data,
+            backgroundColor: '#3498db',
+            borderColor: '#2980b9',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+
+    function saveToPDF() {
+      const doc = new jsPDF();
+      const resultDiv = document.getElementById('result');
+
+      // Tambahkan judul
+      doc.setFontSize(18);
+      doc.text("Laporan CliftonStrengths Test", 10, 20);
+
+      // Tambahkan data peserta
+      doc.setFontSize(12);
+      doc.text(`Nama Peserta: ${document.getElementById('resultNama').textContent}`, 10, 30);
+      doc.text(`Perusahaan: ${document.getElementById('resultPerusahaan').textContent}`, 10, 40);
+      doc.text(`Tanggal Lahir: ${document.getElementById('resultTanggalLahir').textContent}`, 10, 50);
+      doc.text(`Tanggal Test: ${document.getElementById('resultTanggalTest').textContent}`, 10, 60);
+      doc.text(`Jabatan: ${document.getElementById('resultJabatan').textContent}`, 10, 70);
+      doc.text(`Bagian: ${document.getElementById('resultBagian').textContent}`, 10, 80);
+      doc.text(`Lama Bekerja: ${document.getElementById('resultLamaBekerja').textContent} tahun`, 10, 90);
+
+      // Tambahkan interpretasi
+      doc.setFontSize(14);
+      doc.text("Interpretasi Hasil:", 10, 100);
+      doc.setFontSize(12);
+      const interpretation = document.getElementById('interpretation').textContent;
+      const splitText = doc.splitTextToSize(interpretation, 180);
+      doc.text(splitText, 10, 110);
+
+      // Tambahkan grafik (dalam bentuk gambar)
+      const chartCanvas = document.getElementById('strengthChart');
+      const chartImage = chartCanvas.toDataURL('image/png');
+      doc.addPage();
+      doc.addImage(chartImage, 'PNG', 10, 10, 180, 100);
+
+      // Tambahkan tabel
+      doc.addPage();
+      doc.setFontSize(14);
+      doc.text("Skor Tema Kekuatan:", 10, 20);
+      const table = document.querySelector('table');
+      const rows = table.querySelectorAll('tr');
+      let yPos = 30;
+      rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('th, td');
+        let xPos = 10;
+        cells.forEach((cell) => {
+          doc.text(cell.textContent, xPos, yPos);
+          xPos += 50;
+        });
+        yPos += 10;
+      });
+
+      // Simpan PDF
+      doc.save('Laporan_CliftonStrengths.pdf');
+    }
+  </script>
+</body>
+</html>
